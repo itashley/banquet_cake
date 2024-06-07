@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Navbar, Nav, Card, Form, Button, Table } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
-// import axios from '../utils/axios'; // Adjust this import as per your file structure
-// import { setUserSession } from '../utils/Common'; // Adjust this import as per your file structure
+import axios from '../utils/axios'; // Adjust this import as per your file structure
+import { setUserSession } from '../utils/Common'; // Adjust this import as per your file structure
 import Swal from 'sweetalert2';
 import ICON_LOGO from '../assets/icon-only.png'
 function Login() {
@@ -34,29 +34,27 @@ function Login() {
     e.preventDefault();
     setLoading(true);
 
-    // try {
-
-    //   const response = await axios.post('/api/auth',{email,password});
-    //   console.log(response.data);
-
-    //   if (response.status === 200) {
-    //     setUserSession(response.data.token, response.data.user);
-    //     history.push('/dashboard');
-    //   } else {
-    //     throw new Error('Login failed');
-    //   }
-    // } catch (err) {
-    //   console.error('Login error:', err);
-    //   Swal.fire({
-    //     icon: 'error',
-    //     title: 'Authorization Failed',
-    //     text: err.response && err.response.data && err.response.data.message 
-    //       ? err.response.data.message 
-    //       : err.message,
-    //   });
-    // } finally {
-    //   setLoading(false);
-    // }
+    try {
+      const response = await axios.post('/api/login',{email,password});
+      console.log(response.data);
+      if (response.status === 200) {
+        setUserSession(response.data.token, response.data.user);
+        history.push('/dashboard');
+      } else {
+        throw new Error('Login failed');
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      // Swal.fire({
+      //   icon: 'error',
+      //   title: 'Authorization Failed',
+      //   text: err.response && err.response.data && err.response.data.message 
+      //     ? err.response.data.message 
+      //     : err.message,
+      // });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

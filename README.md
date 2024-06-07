@@ -1,4 +1,4 @@
-# Getting Started with Create React App
+# Getting Started with Inquiry Apps For Reservation Team @ASHLEYHOTEL
 
 This project made just for fun.
 

@@ -1,22 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Container, Card, Row, Col,Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from '../../components/Navbar';
-
+import axios from '../../utils/axios';
 const Add = () => {
+  const [loading, setLoading] = useState(false);
+  const [selectedCardList, setSelectedCardList] = useState([]);
   const [selectedCard, setSelectedCard] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
 
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
   };
-  const handleCardClick = (card) => {
-    setSelectedCard(card);
+  const handleCardClick = async (typeInq,idTypeInq) => {
+    setSelectedCard(typeInq);
+    console.log(idTypeInq)
 
-    console.log(card)
+    // Do search for relation for category inquiry
+    try {
+      const response = await axios.get(`/api/list/inq/category/${idTypeInq}`);
+      console.log(response.data);
+      if(response.data.data) {
+        // setSelectedCardList(response.data.data);
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+     
+    } finally {
+      setLoading(false);
+    }
 
+  };
 
-
+  const getInqType = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get('/api/list/inq/type');
+      console.log(response.data);
+      setSelectedCardList(response.data.data);
+    } catch (err) {
+      console.error('Login error:', err);
+     
+    } finally {
+      setLoading(false);
+    }
 
   };
 
@@ -41,75 +68,38 @@ const Add = () => {
     color: selectedOption === 'hello' || selectedOption === 'hells' || selectedOption === 'grruot' ? '#ffffff' : '#6c757d', // White if selected, gray if not   
   };
 
+  useEffect(() => {
+    getInqType()
+  }, []);
+
   return (
     <>
       <Header />
       <Container className="mt-4">
         <Card>
-          <Card.Header style={{ textAlign: 'center', fontWeight: 'bold' }}>Guest Inquiry Form</Card.Header>
+          <Card.Header style={{ textAlign: 'center', fontWeight: 'bold' ,fontSize:"14px"}}>Guest Inquiry Form</Card.Header>
           <Card.Body>
             <Container>
-              <Row>
-                <Col lg={3} className="mb-3">
-                  <Card
-                    className="p-3"
-                    style={selectedCard === 'Business Initiate' ? selectedStyle : cardStyle}
-                    onClick={() => handleCardClick('Business Initiate')}
-                  >
-                    <Card.Body>
-                      <Card.Title>Business Initiate</Card.Title>
-                      <Card.Subtitle className="mb-2" style={{ fontSize: '11px', color: selectedCard === 'Business Initiate' ? '#ffffff' : '#6c757d' }}>
-                        Subtitle here
-                      </Card.Subtitle>
-                    </Card.Body>
-                  </Card>
-                </Col>
 
-                <Col lg={3} className="mb-3">
-                  <Card
-                    className="p-3"
-                    style={selectedCard === 'Business Service' ? selectedStyle : cardStyle}
-                    onClick={() => handleCardClick('Business Service')}
-                  >
-                    <Card.Body>
-                      <Card.Title>Business Service</Card.Title>
-                      <Card.Subtitle className="mb-2" style={{ fontSize: '11px', color: selectedCard === 'Business Service' ? '#ffffff' : '#6c757d' }}>
-                        Subtitle here
-                      </Card.Subtitle>
-                    </Card.Body>
-                  </Card>
-                </Col>
 
-                <Col lg={3} className="mb-3">
+            <Row>
+              {selectedCardList.map((item) => (
+                <Col lg={3} className="mb-3" key={item.id_esc_type}>
                   <Card
                     className="p-3"
-                    style={selectedCard === 'Social Media' ? selectedStyle : cardStyle}
-                    onClick={() => handleCardClick('Social Media')}
+                    style={selectedCard === item.esc_name ? selectedStyle : cardStyle}
+                    onClick={() => handleCardClick(item.esc_name,item.id_esc_type)}
                   >
                     <Card.Body>
-                      <Card.Title>Social Media</Card.Title>
-                      <Card.Subtitle className="mb-2" style={{ fontSize: '11px', color: selectedCard === 'Social Media' ? '#ffffff' : '#6c757d' }}>
-                        Subtitle here
+                      <Card.Title>{item.esc_name}</Card.Title>
+                      <Card.Subtitle className="mb-2" style={{ fontSize: '11px', color: selectedCard === item.esc_name ? '#ffffff' : '#6c757d' }}>
+                        {item.esc_description}
                       </Card.Subtitle>
                     </Card.Body>
                   </Card>
                 </Col>
-
-                <Col lg={3} className="mb-3">
-                  <Card
-                    className="p-3"
-                    style={selectedCard === 'OTA' ? selectedStyle : cardStyle}
-                    onClick={() => handleCardClick('OTA')}
-                  >
-                    <Card.Body>
-                      <Card.Title>OTA</Card.Title>
-                      <Card.Subtitle className="mb-2" style={{ fontSize: '11px', color: selectedCard === 'OTA' ? '#ffffff' : '#6c757d' }}>
-                        Subtitle here
-                      </Card.Subtitle>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              </Row>
+              ))}
+            </Row>
 
               <Row>
                 {[{ title: 'hello', subtitle: 'Subtitle 1' }, { title: 'hells', subtitle: 'Subtitle 2' }, { title: 'grruot', subtitle: 'Subtitle 3' }].map((option, index) => (
@@ -133,6 +123,12 @@ const Add = () => {
                   </Col>
                 ))}
               </Row>
+
+
+
+
+
+
             </Container>
           </Card.Body>
         </Card>
