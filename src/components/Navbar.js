@@ -11,17 +11,19 @@ import moment from 'moment';
 
 
 
-function Navigate() {
+function Navigate({ runGetAPIInsoft }) {
 const history = useHistory();
 
 const [userDetail, setUserDetail] = useState([]);
-
 const handleLogout = async () => {
- 
   removeUserSession()
   history.push('/')
 
 }
+
+const handleLoadAPI = () => {
+  runGetAPIInsoft(); // Run the function passed from props
+};
 
   useEffect(() => {
     const userData = getUser();
@@ -42,14 +44,22 @@ const handleLogout = async () => {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
               <Nav.Link href="#home">Home</Nav.Link>
-              <Nav.Link href="#link">Link</Nav.Link>
-              <NavDropdown title="Inquiry" id="basic-nav-dropdown">
-                <NavDropdown.Item style={{ fontSize: '12px' }} onClick={() => history.push('/inquiry/add')}>Add</NavDropdown.Item>
-                <NavDropdown.Item style={{ fontSize: '12px' }} href="#action/3.2">Another action</NavDropdown.Item>
-                <NavDropdown.Item style={{ fontSize: '12px' }} href="#action/3.3">Something</NavDropdown.Item>
+
+              <NavDropdown title="Menu" id="basic-nav-dropdown">
+                <NavDropdown.Item style={{ fontSize: '12px' }} >List</NavDropdown.Item>
+                <NavDropdown.Item style={{ fontSize: '12px' }} >Calendar</NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item href="#action/3.4" style={{ fontSize: '12px' }}>Separated link</NavDropdown.Item>
               </NavDropdown>
+
+              {/* <NavDropdown title="Inquiry" id="basic-nav-dropdown">
+                <NavDropdown.Item style={{ fontSize: '12px' }} >Add</NavDropdown.Item>
+                <NavDropdown.Item style={{ fontSize: '12px' }} >List</NavDropdown.Item>
+                <NavDropdown.Item style={{ fontSize: '12px' }} >Progress</NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item href="#action/3.4" style={{ fontSize: '12px' }}>Done</NavDropdown.Item>
+                <NavDropdown.Item href="#action/3.4" style={{ fontSize: '12px' }}>Ongoing</NavDropdown.Item>
+                <NavDropdown.Item href="#action/3.4" style={{ fontSize: '12px' }}>Waiting to Review</NavDropdown.Item>
+              </NavDropdown> */}
             </Nav>
             <Nav className="ml-auto">
               <NavDropdown title={`Signed in as: ${userDetail ? userDetail.name : ''}`} id="user-nav-dropdown" alignRight>
@@ -67,8 +77,8 @@ const handleLogout = async () => {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="me-auto">
-                <Nav.Link href="#home"><i className="bi bi-bar-chart-fill"></i> <span className="ml-2">Statistic</span></Nav.Link>
-                <Nav.Link href="#home"><i className="bi bi-calendar-check-fill"></i> <span className="ml-2">Statistic</span></Nav.Link>
+                <Nav.Link onClick={()=>handleLoadAPI()}><i className="bi bi-arrow-repeat"></i> <span className="ml-2">Load Insoft</span></Nav.Link>
+                {/* <Nav.Link href="#home"><i className="bi bi-calendar-check-fill"></i> <span className="ml-2">Statistic</span></Nav.Link>
                 <NavDropdown title="Inquiry" id="basic-nav-dropdown">
                   <NavDropdown.Item onClick={() => history.push('/inquiry/add')}>Add</NavDropdown.Item>
                   <NavDropdown.Item href="#action/3.2">
@@ -79,7 +89,7 @@ const handleLogout = async () => {
                   <NavDropdown.Item href="#action/3.4">
                     Separated link
                   </NavDropdown.Item>
-                </NavDropdown>
+                </NavDropdown> */}
               </Nav>
             </Navbar.Collapse>
             {/* <Navbar.Collapse className="justify-content-end">

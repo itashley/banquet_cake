@@ -8,7 +8,7 @@ import {
 import Dashboard from './pages/Dashboard';
 import Login from "./pages/Login";
 import FormAdd from "./pages/Inquiry/Add"
-// import Report from "./pages/Report";
+import InquiryList from "./pages/Inquiry/List";
 import PublicRoute from "./utils/PublicRoute";
 import PrivateRoute from "./utils/PrivateRoute";
 
@@ -19,6 +19,7 @@ function App() {
         <PublicRoute exact path="/" component={Login} />
         <PrivateRoute exact path="/dashboard" component={Dashboard} />
         <PrivateRoute exact path="/inquiry/add" component={FormAdd} />
+        <PrivateRoute exact path="/inquiry/list" component={InquiryList} />
       </Switch>
     </Router>
   );

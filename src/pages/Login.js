@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container, Navbar, Nav, Card, Form, Button, Table } from 'react-bootstrap';
+import {  Card, Form, Button } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import axios from '../utils/axios'; // Adjust this import as per your file structure
 import { setUserSession } from '../utils/Common'; // Adjust this import as per your file structure
 import Swal from 'sweetalert2';
-import ICON_LOGO from '../assets/icon-only.png'
+import ICON_LOGO from '../assets/icon-only.png';
+
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -35,8 +36,13 @@ function Login() {
     setLoading(true);
 
     try {
-      const response = await axios.post('/api/login',{email,password});
-      console.log(response.data);
+      const response = await axios.post('/api/login', { email, password }, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        }
+      });
+      
       if (response.status === 200) {
         setUserSession(response.data.token, response.data.user);
         history.push('/dashboard');
@@ -45,13 +51,13 @@ function Login() {
       }
     } catch (err) {
       console.error('Login error:', err);
-      // Swal.fire({
-      //   icon: 'error',
-      //   title: 'Authorization Failed',
-      //   text: err.response && err.response.data && err.response.data.message 
-      //     ? err.response.data.message 
-      //     : err.message,
-      // });
+      Swal.fire({
+        icon: 'error',
+        title: 'Authorization Failed',
+        text: err.response && err.response.data && err.response.data.message 
+          ? err.response.data.message 
+          : err.message,
+      });
     } finally {
       setLoading(false);
     }
@@ -59,46 +65,38 @@ function Login() {
 
   return (
     <div style={backgroundStyle} className="d-flex justify-content-center align-items-center">
-      <div className="card p-4" style={cardStyle}>
-        <div className="card-body">
+      <Card className="p-4" style={cardStyle}>
+        <Card.Body>
           <img src={ICON_LOGO} height={80} className="d-block mx-auto mb-4"/>
-          <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label htmlFor="email" className="form-label">
-                Email address
-              </label>
-              <input
+          <Form onSubmit={handleSubmit}>
+            <Form.Group className="mb-3" controlId="email">
+              <Form.Label>Email address</Form.Label>
+              <Form.Control
                 type="email"
                 style={inputStyle}
-                className="form-control"
-                id="email"
                 placeholder="Enter email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="password" className="form-label">
-                Password
-              </label>
-              <input
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="password">
+              <Form.Label>Password</Form.Label>
+              <Form.Control
                 type="password"
                 style={inputStyle}
-                className="form-control"
-                id="password"
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
-            </div>
-            <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+            </Form.Group>
+            <Button type="submit" className="btn btn-primary w-100" disabled={loading}>
               {loading ? 'Loading...' : 'Login'}
-            </button>
-          </form>
-        </div>
-      </div>
+            </Button>
+          </Form>
+        </Card.Body>
+      </Card>
     </div>
   );
 }

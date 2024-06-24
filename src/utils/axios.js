@@ -9,7 +9,7 @@ const getAuthToken = () => {
 
 // Create an Axios instance
 const instance = axios.create({
-  baseURL: 'https://resinquiry.primahotelindonesia.info/',
+  baseURL: 'http://banquet.primahotelindonesia.info/',
   headers: {
    
     'content-type': 'text/json',
